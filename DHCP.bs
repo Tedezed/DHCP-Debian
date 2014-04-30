@@ -1,0 +1,31 @@
+#Ejercicio 22
+#!/bin/bash
+#By Tedezed
+#Script para red
+
+idveri=$(id | egrep -o 'uid=0')
+if [ "$idveri" != "uid=0" ]
+then
+	echo "Este script necesita permisos de root"
+	echo "Intentalo de nuevo como root"
+else
+	seedhcp=$(dpkg -l | egrep 'isc-dhcp-server')
+	if [ "$seedhcp" == ""  ]
+	then
+		echo "Paquete 'isc-dhcp-server' necesario no encontrado"
+		read -p "Pulsa para continuar e instalar..."
+		apt-get update
+		apt-get install isc-dhcp-server
+	fi
+	direc=$(pwd)
+	echo "Iniciando configuracion de Servidor DHCP"
+	echo "Interfaces del Sistema: "
+	/sbin/ifconfig | egrep -o '^[a-z].......'
+	read -p "Introduce la interfaz que se va a utilizar: " interfz
+	read -p "Introduce la IP del servidor (Ej:192.168.0.1): " ipserver 
+	read -p "Introduce la mascara de red (Ej:255.255.255.0): " maskip
+	ifconfig $interfz $ipserver netmask $maskip
+	cp $direc/isc-dhcp-server /etc/default/isc-dhcp-server
+	cp $direc/dhcpd.conf /etc/dhcp/dhcpd.conf
+	sed -i 's/INTERFACES=""/INTERFACES="'$interfz'"/g' /etc/default/isc-dhcp-server
+fi
