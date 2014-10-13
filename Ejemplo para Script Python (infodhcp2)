@@ -1,0 +1,45 @@
+Ejemplo para Script Python
+// .... /etc/dhcp/dhcpd.conf
+
+# Configuración del servifor DHCP 
+# Rango 
+subnet 192.168.100.0 netmask 255.255.255.0 { 
+      range 192.168.100.2 192.168.100.253; 
+      option routers 192.168.100.1;
+      ddns-update-style none;
+      option domain-name "gonz.ejemplo";
+      option domain-name-servers 8.8.8.8, 8.8.4.4;
+      default-lease-time 7200;
+      max-lease-time 21600;
+      authoritative;
+      log-facility local7;
+}
+host cliente {
+hardware ethernet 08:00:27:f5:18:42;
+option domain-name-servers 8.8.8.8;
+option routers 192.168.100.1;
+option broadcast-address 192.168.100.255;
+fixed-address 192.168.100.100;
+}
+
+// .... /var/lib/dhcp/dhcpd.leases 
+# The format of this file is documented in the dhcpd.leases(5) manual page.
+# This lease file was written by isc-dhcp-4.2.2
+
+lease 192.168.100.3 {
+  starts 4 2014/10/09 16:48:58;
+  ends 4 2014/10/09 18:48:58;
+  tstp 4 2014/10/09 18:48:58;
+  cltt 4 2014/10/09 16:48:58;
+  binding state free;
+  hardware ethernet 08:00:27:f7:95:9a;
+}
+lease 192.168.100.2 {
+  starts 5 2014/10/10 07:40:23;
+  ends 5 2014/10/10 07:50:27;
+  tstp 5 2014/10/10 07:50:27;
+  cltt 5 2014/10/10 07:40:23;
+  binding state free;
+  hardware ethernet 08:00:27:f5:18:42;
+}
+server-duid "\000\001\000\001\033\311\032\274\010\000'\367\225\232";
